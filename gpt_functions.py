@@ -51,11 +51,10 @@ def create_dir(directory):
     directory = safepath(directory)
 
     print(f"FUNCTION: Creating directory code/{directory}")
-    if os.path.exists( "code/"+directory+"/" ):
+    if os.path.exists(f"code/{directory}/"):
         return "ERROR: Directory exists"
-    else:
-        os.mkdir( "code/"+directory )
-        return f"Directory {directory} created!"
+    os.mkdir(f"code/{directory}")
+    return f"Directory {directory} created!"
 
 def move_file(source, destination):
     source = safepath(source)
@@ -145,8 +144,7 @@ def list_files(list = "", print_output = True):
     return f"List of files in the project:\n{files}"
 
 def ask_clarification(question):
-    answer = input(f"## ChatGPT Asks a Question ##\n```{question}```\nAnswer: ")
-    return answer
+    return input(f"## ChatGPT Asks a Question ##\n```{question}```\nAnswer: ")
 
 def run_cmd(base_dir, command, reason):
     base_dir = safepath(base_dir)
@@ -162,17 +160,16 @@ def run_cmd(base_dir, command, reason):
         ["YES", "NO"]
     )
 
-    if answer == "YES":
-        result = subprocess.run(command, shell=True, capture_output=True, text=True)
-        output = result.stdout + result.stderr
-
-        return_value = "Result from command (last 245 chars):\n" + output[-245:]
-
-        print(return_value)
-
-        return return_value
-    else:
+    if answer != "YES":
         return "I don't want you to run that command"
+    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    output = result.stdout + result.stderr
+
+    return_value = "Result from command (last 245 chars):\n" + output[-245:]
+
+    print(return_value)
+
+    return return_value
 
 def project_finished(finished):
     return "PROJECT_FINISHED"
